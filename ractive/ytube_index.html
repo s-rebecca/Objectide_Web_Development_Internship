@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang='en-GB'>
+<head>
+  <meta charset='utf-8'>
+  <title>Ractive test</title>
+  <script src="https://cdn.jsdelivr.net/npm/ractive@latest/ractive.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+  
+  <!--
+       1. This is the element we'll render our Ractive to.
+  -->
+  <div class="container"> 
+  <div id='app'></div>
+  </div> 
+  <!--
+       2. You can load a template in many ways. For convenience, we'll include it in
+       a script tag so that we don't need to mess around with AJAX or multiline strings.
+       Note that we've set the type attribute to 'text/ractive' - though it can be
+       just about anything except 'text/javascript'
+  -->
+  <script id='template' type='text/ractive'>
+    <h1 style="color: {{color}}">Ractive sandbox</h1>
+    <p>Hello, {{name}}!</p>
+    {{#if showAddress}}
+    <ul>
+        {{#address}}
+        <li>{{street}}</li>
+        <li>{{city}}</li>
+        <li>{{state}}</li>
+        {{/address}}
+    </ul>
+    {{else}}
+        <p>Address hidden</p>
+    {{/if}}    
+    <button on-click="showAddress">
+        {{#if showAddress}} Hide address
+        {{else}} Show address
+        {{/if}}
+    </button>
+    <h3>friends</h3>
+    <ul>
+    {{#friends}}
+        <li>{{name}}, {{age}}</li>
+    {{/friends}}
+    </ul>
+
+    <jobs />
+
+    <h3>Work history</h3>
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Company</th>
+            <th>Job title</th>
+            <th>Years</th>
+        </tr>
+        {{#each jobs:i}}
+
+        <tr>
+            <td>{{i}}</td>
+            <td>{{company}}</td>
+            <td>{{title}}</td>
+            <td>{{years}}</td>
+        </tr>
+        {{/each}}
+    </table>
+    <button on-click="@this.addJob()">Add job</button>
+  </script>
+
+  <script id="jobs" type="text/ractive">
+    This is jobs component
+  </script>
+
+  <!--
+       3. You can always get the most recent stable version from the URL below.
+       If you want the newest features (unstable!), use the 'edge' version instead:
+
+       If you need IE8 support, change 'ractive' to 'ractive-legacy'.
+  -->
+
+  <!--
+       4. We've got an element in the DOM, we've created a template, and we've
+       loaded the library - now it's time to build our Hello World app.
+  -->
+  <script>
+    //create work history component
+    var Jobs = Ractive.extend({
+        template:'#jobs',
+        oninit: function(){
+        
+        } 
+    });
+
+
+    var ractive = new Ractive({
+      // The `el` option can be a node, an ID, or a CSS selector.
+      el: '#app',
+      // We could pass in a string, but for the sake of convenience
+      // we're passing the ID of the <script> tag above.
+      template: '#template',
+      // Here, we're passing in some initial data
+      components: {jobs: Jobs},
+      addJob:function(){
+            ractive.push('jobs', {
+            company:'test123',
+            title:'test_title',
+            years:0
+        });
+      },
+      data: { name: 'world',
+            color: 'red',
+            address:{
+                street: 'kunnathurmedu',
+                city: 'Palakkad',
+                state:'Kerala'
+            },
+            friends:[
+                {name:'John', age:35},
+                {name:'Kelly', age:34},
+                {name:'Miranda', age:37}
+            ],
+            
+            jobs:[
+                {
+                    company:'123',
+                    title:'senior web dev',
+                    years:3
+                },
+                {
+                    company:'456',
+                    title:'graphic designer',
+                    years:4
+                }
+            ],
+
+
+            showAddress: false
+      }
+    });
+
+    ractive.set('color', 'green');
+    
+
+    //ractive.splice('jobs', 2, 1);
+    ractive.on('showAddress', function(){
+        ractive.toggle('showAddress');
+    });
+
+  </script>
+</body>
+</html>

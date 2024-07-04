@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Countdown Timer</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/ractive@latest/ractive.min.js"></script>
+</head>
+<body>
+  <div id="target"></div>
+
+  <script id="template" type="text/ractive">
+    <div class="timer">
+      <h1>Countdown Timer</h1>
+      <div class="input-field">
+        <input type="text" class="ok" placeholder="Enter time in seconds" value="{{duration}}" on-change="@this.updateTime()">
+      </div>
+      <div class="time-display {{isRunning ? 'time-running' : 'time-paused'}}">
+        {{formattedTime}}
+      </div>
+      <div class="controls">
+        <button on-click="@this.start()">Start</button>
+        <button on-click="@this.pause()">Pause</button>
+        <button on-click="@this.reset()">Reset</button>
+      </div>
+      {{#if timeup}}
+        <div class="alert">Time's up!</div>
+      {{/if}}
+    </div>
+  </script>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
