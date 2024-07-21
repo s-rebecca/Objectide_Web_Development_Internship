@@ -1,0 +1,29 @@
+<div>
+	<div class="timer">
+		{{#if !$settings.hideLabel}}
+		<h1>Countdown Timer</h1>
+		{{/if}}
+		{{#if !$settings.disabled}}
+		<div class="input-field">
+			{{#if !isRunning}}
+			<input type="text" class="ok" placeholder="Enter time in seconds" value={{$settings.duration}} on-change="@.updateTime()">
+         {{else}}
+         {{$settings.duration}}
+         {{/if}}
+      </div>
+			{{/if}}
+			<div class="time-display {{isRunning ? 'time-running' : 'time-paused'}}">
+				{{formattedTime}}
+			</div>
+			{{#if !$settings.disabled}}
+			<div class="controls">
+				<button on-click="@.start()" disabled="{{isRunning}}">Start</button>
+				<button on-click="@.pause()">Pause</button>
+				<button on-click="@.reset()">Reset</button>
+			</div>
+			{{/if}}
+			{{#if timeup}}
+			<div class="alert">Time's up!</div>
+			{{/if}}
+		</div>
+	</div>

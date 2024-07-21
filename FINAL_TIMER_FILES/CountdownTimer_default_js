@@ -1,0 +1,55 @@
+Ractive.components.CountdownTimer = Ractive.extend({
+  template: '{{>CountdownTimer_default_template}}', 
+  isolated: false,
+  data: function () {
+    return {
+      remaining: 300,
+      intervalId: null,
+      formattedTime: '05:00',
+      timeup: false,
+      isRunning: false
+      
+    };
+  },
+  updateTime: function () {
+    var duration = $this.get('$settings.duration');
+    this.set({
+      remaining: duration,
+      formattedTime: this.formatTime(duration),
+      timeup: false
+    });
+  },
+  formatTime: function (seconds) {
+    var minutes = Math.floor(seconds / 60);
+    seconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  },
+  start: function () {
+    $this.$start();
+  },
+  pause: function () {
+    $this.$pause();
+  },
+  reset: function () {
+    $this.$reset();
+  },
+  oninit: function () {
+    this.set('initialized',true)
+    this.updateTime();
+    console.log($this.get('$settings.duration'));
+  },
+  onrender: function(){
+    this.observe('isRunning', function (isRunning) {
+  var timeDisplay = this.find('.time-display');
+  if (timeDisplay)
+  timeDisplay.className = 'time-display ' + (isRunning ? 'time-running' : 'time-paused');
+ });
+  }
+
+});
+
+
+ return '<CountdownTimer/>'
+
+ //duration is a setting:
+ //type: Number
